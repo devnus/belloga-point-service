@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.2'
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
+	id "org.asciidoctor.jvm.convert" version "3.3.2" //1
 }
 
 group = 'com.devnus.belloga'
@@ -14,15 +15,49 @@ configurations {
 	}
 }
 
+//2
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+//3
+asciidoctor {
+	dependsOn test
+	attributes 'snippets': snippetsDir
+	inputs.dir snippetsDir
+}
+
+asciidoctor.doFirst {  // 7
+	println("---------------- delete present asciidoctor.")
+	delete file('src/main/resources/static/docs')
+}
+
+//4
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'src/main/resources/static/docs'
+	}
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+	implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.5'
+	implementation 'org.springframework.kafka:spring-kafka'
+	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: '2.0.5.RELEASE'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 tasks.named('test') {
