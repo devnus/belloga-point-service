@@ -1,4 +1,4 @@
-package com.devnus.belloga.point.point.domain;
+package com.devnus.belloga.point.tempPoint.domain;
 
 import lombok.Builder;
 import lombok.Getter;
