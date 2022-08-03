@@ -67,6 +67,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('generate api docs by spring rest docs and send to swagger ui') {
             steps {
                 sh '''
@@ -93,6 +94,7 @@ pipeline {
                 }
             }
         }
+        */
         stage('dockerizing project') {
             steps {
                 sh '''
