@@ -98,7 +98,7 @@ pipeline {
         stage('dockerizing project') {
             steps {
                 sh '''
-        		 docker build -t $IMAGE_NAME .
+        		 docker build -t $IMAGE_NAME:$BUILD_NUMBER .
         		 '''
             }
             post {
@@ -117,7 +117,7 @@ pipeline {
                     sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
 
                     docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_NAME}") {
-                      docker.image("${IMAGE_NAME}:latest").push()
+                      docker.image("${IMAGE_NAME}:${BUILD_NUMBER}").push()
                     }
                 }
             }
@@ -130,22 +130,22 @@ pipeline {
                 }
             }
         }
-        stage('kubectl apply') { // 지금은 apply로 하는데 나중엔 롤링업데이트 하자
+        stage('kubectl apply') {
             steps {
                 sshagent (credentials: ['bestion-ssh']) { // use SSH Agent
                 sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@43.200.60.243 '
-                    kubectl apply -f ./belloga-kube/belloga-point-service.yaml
+                    kubectl set image deploy point-service-v1 point-service=${IMAGE_NAME}:${BUILD_NUMBER}
                     '
                 """
                 }
             }
             post {
                 success {
-                    echo 'success kubectl apply'
+                    echo 'success kubectl rolling update'
                 }
                 failure {
-                    error 'fail kubectl apply' // exit pipeline
+                    error 'fail kubectl rolling update' // exit pipeline
                 }
             }
         }
