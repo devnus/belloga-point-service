@@ -23,9 +23,8 @@ public class TempPointConsumer {
      * @param event
      * @throws IOException
      */
-    @KafkaListener(topics = PAY_TEMP_POINT_TO_LABELER_TOPIC, groupId = PAY_TEMP_POINT_TO_LABELER_TOPIC_GROUP)
-    protected void consumePayTmpPointToLabeler(Object event) throws IOException {
-        EventLabeledData.PayTmpPointToLabeler consumeEvent = (EventLabeledData.PayTmpPointToLabeler) event;
-        tempPointService.saveTempPoint(consumeEvent.getLabelerId(), consumeEvent.getLabelingUUID(), consumeEvent.getValue());
+    @KafkaListener(topics = PAY_TEMP_POINT_TO_LABELER_TOPIC, groupId = PAY_TEMP_POINT_TO_LABELER_TOPIC_GROUP, containerFactory = "eventLabeledDataPayTmpPointToLabelerListener")
+    protected void consumePayTmpPointToLabeler(EventLabeledData.PayTmpPointToLabeler event) throws IOException {
+        tempPointService.saveTempPoint(event.getLabelerId(), event.getLabelingUUID(), event.getValue());
     }
 }
