@@ -36,7 +36,12 @@ public class KafkaConsumerConfig {
 
     @Bean
     ConsumerFactory<String,Object> consumerFactory(){
-        return new DefaultKafkaConsumerFactory<>(configProps(), new StringDeserializer(), new JsonDeserializer<>(Object.class));
+        JsonDeserializer<Object> deserializer = new JsonDeserializer<>(Object.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+
+        return new DefaultKafkaConsumerFactory<>(configProps(), new StringDeserializer(), deserializer);
     }
 
     @Bean
@@ -48,7 +53,12 @@ public class KafkaConsumerConfig {
 
     @Bean
     ConsumerFactory<String, EventLabeledData.PayTmpPointToLabeler> eventLabeledDataPayTmpPointToLabelerFactory(){
-        return new DefaultKafkaConsumerFactory<>(configProps(), new StringDeserializer(), new JsonDeserializer<>(EventLabeledData.PayTmpPointToLabeler.class));
+        JsonDeserializer<EventLabeledData.PayTmpPointToLabeler> deserializer = new JsonDeserializer<>(EventLabeledData.PayTmpPointToLabeler.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+
+        return new DefaultKafkaConsumerFactory<>(configProps(), new StringDeserializer(), deserializer);
     }
 
     @Bean
