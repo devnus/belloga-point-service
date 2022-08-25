@@ -1,4 +1,4 @@
-package com.devnus.belloga.point.tempPoint.dto;
+package com.devnus.belloga.point.point.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

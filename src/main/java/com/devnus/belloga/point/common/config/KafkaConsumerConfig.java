@@ -1,6 +1,6 @@
 package com.devnus.belloga.point.common.config;
 
-import com.devnus.belloga.point.tempPoint.dto.EventLabeledData;
+import com.devnus.belloga.point.point.dto.EventLabeledData;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;

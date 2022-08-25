@@ -1,9 +1,10 @@
-package com.devnus.belloga.point.tempPoint.service;
+package com.devnus.belloga.point.point.service;
 
 
-import com.devnus.belloga.point.tempPoint.domain.TempPoint;
-import com.devnus.belloga.point.tempPoint.dto.EventLabeledData;
-import com.devnus.belloga.point.tempPoint.repository.TempPointRepository;
+import com.devnus.belloga.point.point.domain.Point;
+import com.devnus.belloga.point.point.domain.TempPoint;
+import com.devnus.belloga.point.point.dto.EventLabeledData;
+import com.devnus.belloga.point.point.repository.PointRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,18 +21,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @DataJpaTest // JPA관련 의존성만 가져옴
-public class TempPointServiceImplTest {
+public class PointServiceImplTest {
 
-    TempPointServiceImpl tempPointService;
+    PointServiceImpl pointService;
 
     @Autowired
-    TempPointRepository tempPointRepository;
+    PointRepository pointRepository;
 
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this); //Mock어노테이션 필드 초기화
-        tempPointService = new TempPointServiceImpl(tempPointRepository);
+        pointService = new PointServiceImpl(pointRepository);
     }
 
     @AfterEach
@@ -44,15 +45,18 @@ public class TempPointServiceImplTest {
     @DisplayName("임시포인트 지급 테스트")
     void saveTempPointTest() {
         // given
+        String labelerId = "labeler-hello";
         EventLabeledData.PayTmpPointToLabeler event = EventLabeledData.PayTmpPointToLabeler.builder()
-                .labelerId("labeler-hello")
+                .labelerId(labelerId)
                 .labelingUUID("label1")
                 .value(15L)
                 .build();
         //when
-        tempPointService.saveTempPoint(event.getLabelerId(), event.getLabelingUUID(), event.getValue());
+        pointService.saveTempPoint(event.getLabelerId(), event.getLabelingUUID(), event.getValue());
         //then
-        List<TempPoint> list = tempPointRepository.findAll();
+        Point point = pointRepository.findByLabelerId(labelerId).orElseGet(()->null);
+        System.out.println(point.getPointValue());
+        List<TempPoint> list = point.getTempPointList();
         assertEquals(list.size(), 1);
     }
 }

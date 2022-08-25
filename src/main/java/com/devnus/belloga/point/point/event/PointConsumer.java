@@ -1,7 +1,7 @@
-package com.devnus.belloga.point.tempPoint.event;
+package com.devnus.belloga.point.point.event;
 
-import com.devnus.belloga.point.tempPoint.dto.EventLabeledData;
-import com.devnus.belloga.point.tempPoint.service.TempPointService;
+import com.devnus.belloga.point.point.dto.EventLabeledData;
+import com.devnus.belloga.point.point.service.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -13,10 +13,10 @@ import java.io.IOException;
  */
 @Component
 @RequiredArgsConstructor
-public class TempPointConsumer {
+public class PointConsumer {
     private static final String PAY_TEMP_POINT_TO_LABELER_TOPIC = "pay-tmp-point-to-labeler";
     private static final String PAY_TEMP_POINT_TO_LABELER_TOPIC_GROUP = "pay-tmp-point-to-labeler-1";
-    private final TempPointService tempPointService;
+    private final PointService pointService;
 
     /**
      * 라벨링 마이크로서비스로부터 임시 포인트 지급 이벤트를 받아 처리한다
@@ -25,6 +25,6 @@ public class TempPointConsumer {
      */
     @KafkaListener(topics = PAY_TEMP_POINT_TO_LABELER_TOPIC, groupId = PAY_TEMP_POINT_TO_LABELER_TOPIC_GROUP, containerFactory = "eventLabeledDataPayTmpPointToLabelerListener")
     protected void consumePayTmpPointToLabeler(EventLabeledData.PayTmpPointToLabeler event) throws IOException {
-        tempPointService.saveTempPoint(event.getLabelerId(), event.getLabelingUUID(), event.getValue());
+        pointService.saveTempPoint(event.getLabelerId(), event.getLabelingUUID(), event.getValue());
     }
 }
