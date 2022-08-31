@@ -15,3 +15,10 @@ CREATE TABLE temp_point (
     status BOOLEAN,
     FOREIGN KEY(point_id) REFERENCES point(id)
 );
+
+/* Stamp 테이블 */
+CREATE TABLE stamp (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    labeler_id VARCHAR(255),
+    stamp_value INT
+);
