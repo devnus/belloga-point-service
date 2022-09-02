@@ -4,6 +4,7 @@ import com.devnus.belloga.point.common.dto.CommonResponse;
 import com.devnus.belloga.point.common.dto.ErrorResponse;
 import com.devnus.belloga.point.common.exception.error.InsufficientPointException;
 import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdException;
+import com.devnus.belloga.point.common.exception.error.NotFoundTempPointException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,6 +36,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientPointException.class)
     protected ResponseEntity<CommonResponse> handleInsufficientPointException(InsufficientPointException ex) {
         ErrorCode errorCode = ErrorCode.INSUFFICIENT_POINT;
+
+        ErrorResponse error = ErrorResponse.builder()
+                .status(errorCode.getStatus().value())
+                .message(errorCode.getMessage())
+                .code(errorCode.getCode())
+                .build();
+
+        CommonResponse response = CommonResponse.builder()
+                .success(false)
+                .error(error)
+                .build();
+        return new ResponseEntity<>(response, errorCode.getStatus());
+    }
+    @ExceptionHandler(NotFoundTempPointException.class)
+    protected ResponseEntity<CommonResponse> handleNotFoundDataException(NotFoundTempPointException ex) {
+        ErrorCode errorCode = ErrorCode.NOT_FOUND_TEMP_POINT;
 
         ErrorResponse error = ErrorResponse.builder()
                 .status(errorCode.getStatus().value())

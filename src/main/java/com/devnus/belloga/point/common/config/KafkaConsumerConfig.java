@@ -67,6 +67,40 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(eventLabeledDataPayTmpPointToLabelerFactory());
         return factory;
     }
+
+    @Bean
+    ConsumerFactory<String, EventLabeledData.ChangeTmpPointToPoint> eventLabeledDataChangeTmpPointToPointFactory(){
+        JsonDeserializer<EventLabeledData.ChangeTmpPointToPoint> deserializer = new JsonDeserializer<>(EventLabeledData.ChangeTmpPointToPoint.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+
+        return new DefaultKafkaConsumerFactory<>(configProps(), new StringDeserializer(), deserializer);
+    }
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory<String, EventLabeledData.ChangeTmpPointToPoint> eventLabeledDataChangeTmpPointToPointListener(){
+        ConcurrentKafkaListenerContainerFactory<String, EventLabeledData.ChangeTmpPointToPoint> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(eventLabeledDataChangeTmpPointToPointFactory());
+        return factory;
+    }
+
+    @Bean
+    ConsumerFactory<String, EventLabeledData.DeleteTmpPoint> eventLabeledDataDeleteTmpPointFactory(){
+        JsonDeserializer<EventLabeledData.DeleteTmpPoint> deserializer = new JsonDeserializer<>(EventLabeledData.DeleteTmpPoint.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+
+        return new DefaultKafkaConsumerFactory<>(configProps(), new StringDeserializer(), deserializer);
+    }
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory<String, EventLabeledData.DeleteTmpPoint> eventLabeledDataDeleteTmpPointListener(){
+        ConcurrentKafkaListenerContainerFactory<String, EventLabeledData.DeleteTmpPoint> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(eventLabeledDataDeleteTmpPointFactory());
+        return factory;
+    }
 }
 
 

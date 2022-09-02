@@ -15,4 +15,20 @@ public class EventLabeledData {
         private String labelingUUID; // 포인트 지급 처리용 라벨링 고유값
         private Long value;
     }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChangeTmpPointToPoint {
+        private String labelingUUID;
+    }
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteTmpPoint {
+        private String labelingUUID;
+    }
+
 }
