@@ -12,7 +12,7 @@ CREATE TABLE temp_point (
     labeling_uuid VARCHAR(255),
     point_value BIGINT,
     point_id BIGINT,
-    status BOOLEAN,
+    status VARCHAR(15),
     FOREIGN KEY(point_id) REFERENCES point(id)
 );
 

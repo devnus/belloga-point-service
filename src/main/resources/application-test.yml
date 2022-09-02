@@ -37,3 +37,6 @@ app:
   topic:
     labeled-data:
       pay-tmp-point-to-labeler: pay-tmp-point-to-labeler
+      change-tmp-point-to-point: change-tmp-point-to-point # 임시포인트를 실제 포인트로 변환 이벤트
+      delete-tmp-point: delete-tmp-point # 임시 포인트 삭제 이벤트
+

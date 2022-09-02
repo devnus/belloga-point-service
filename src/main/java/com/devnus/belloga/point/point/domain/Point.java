@@ -41,4 +41,8 @@ public class Point {
         tempPoint.setPoint(this);
         this.tempPointList.add(tempPoint);
     }
+
+    public void increasePoint(Long value) {
+        this.pointValue += value;
+    }
 }
