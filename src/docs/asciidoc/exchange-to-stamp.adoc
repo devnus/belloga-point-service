@@ -1,0 +1,15 @@
+[[api-exchange-to-stamp]]
+== 포인트를 스탬프로 교환 API
+포인트를 스탬프로 교환합니다.
+
+====== 요청 형식
+include::{snippets}/exchange-to-stamp/http-request.adoc[]
+====== Request Body
+include::{snippets}/exchange-to-stamp/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/exchange-to-stamp/http-response.adoc[]
+include::{snippets}/exchange-to-stamp/response-fields.adoc[]
+====== Response Body
+include::{snippets}/exchange-to-stamp/response-body.adoc[]
+====== Try with curl
+include::{snippets}/exchange-to-stamp/curl-request.adoc[]
