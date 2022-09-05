@@ -5,6 +5,7 @@ import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdExceptio
 import com.devnus.belloga.point.point.domain.Point;
 import com.devnus.belloga.point.point.repository.PointRepository;
 import com.devnus.belloga.point.stamp.domain.Stamp;
+import com.devnus.belloga.point.stamp.dto.ResponseStamp;
 import com.devnus.belloga.point.stamp.repository.StampRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,5 +43,13 @@ public class StampServiceImpl implements StampService {
 
         point.decreasePoint(pointRatio); // 포인트 감소시킨다.
         stamp.increaseStamp(1); // 개수를 1 증가시킨다.
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseStamp.MyStampInfo getMyStampInfo(String labelerId) {
+        Stamp stamp = stampRepository.findByLabelerId(labelerId)
+                .orElseThrow(()->new NotFoundLabelerIdException());
+        return ResponseStamp.MyStampInfo.of(stamp);
     }
 }
