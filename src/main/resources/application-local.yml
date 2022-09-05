@@ -34,6 +34,9 @@ spring:
       enable-auto-commit: true
 
 app:
+  stamp:
+    point-ratio: 10
+
   topic:
     labeled-data:
       pay-tmp-point-to-labeler: pay-tmp-point-to-labeler

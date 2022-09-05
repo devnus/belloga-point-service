@@ -13,7 +13,7 @@ spring:
   flyway:
     enabled: true
     baselineOnMigrate: true
-    locations: classpath:db/migration/{vendor},classpath:db/seed/local # when you want to give test seed, add location test seed too
+    locations: classpath:db/migration/{vendor},classpath:db/seed/test # when you want to give test seed, add location test seed too
 
   jpa:
     show-sql: true
@@ -34,7 +34,9 @@ spring:
       enable-auto-commit: true
 
 app:
-  topic:
+  stamp:
+    point-ratio: 10
+
     labeled-data:
       pay-tmp-point-to-labeler: pay-tmp-point-to-labeler
       change-tmp-point-to-point: change-tmp-point-to-point # 임시포인트를 실제 포인트로 변환 이벤트
