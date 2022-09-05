@@ -37,7 +37,7 @@ class StampControllerTest {
 
     @Test
     @DisplayName("포인트를 스탬프로 교환 API 성공 테스트")
-    void requestOCRTargetDataSuccess () throws Exception {
+    void exchangePointToStampSuccess () throws Exception {
         String labelerId = "gildong";
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/stamp/v1/add")
@@ -53,6 +53,28 @@ class StampControllerTest {
                                 fieldWithPath("dateTime").description("response time"),
                                 fieldWithPath("success").description("정상 응답 여부"),
                                 fieldWithPath("response").description("null"),
+                                fieldWithPath("error").description("error 발생 시 에러 정보")
+                        )
+                ));
+    }
+    @Test
+    @DisplayName("내 스탬프 조회 API 성공 테스트")
+    void getMyStampInfoSuccess () throws Exception {
+        String labelerId = "gildong";
+
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/stamp/v1/info")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("labeler-id", labelerId) // 라벨링 수행하는 유저의 식별아이디, api gateway에서 받아온다.
+                )
+
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("get-my-stamp-info",
+                        responseFields(
+                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                                fieldWithPath("dateTime").description("response time"),
+                                fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response.stampValue").description("스탬프 갯수"),
                                 fieldWithPath("error").description("error 발생 시 에러 정보")
                         )
                 ));
