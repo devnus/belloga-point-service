@@ -6,6 +6,7 @@ import com.devnus.belloga.point.common.dto.CommonResponse;
 import com.devnus.belloga.point.stamp.service.StampService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,19 @@ public class StampController {
 
         return new ResponseEntity<>(CommonResponse.builder()
                 .success(true)
+                .build(), HttpStatus.OK);
+    }
+
+    /**
+     * stamp value를 반환한다.
+     * @param labelerId
+     * @return
+     */
+    @GetMapping("/v1/info")
+    public ResponseEntity<CommonResponse> getMyStampInfo(@GetAccountIdentification(role = UserRole.LABELER) String labelerId) {
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(true)
+                .response(stampService.getMyStampInfo(labelerId))
                 .build(), HttpStatus.OK);
     }
 

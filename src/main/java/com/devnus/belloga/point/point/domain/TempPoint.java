@@ -10,12 +10,19 @@ import javax.persistence.*;
  * 라벨링 수행 시 받는 임시 포인트, 1 대 다
  */
 @Entity
-@NamedEntityGraph(name = "TempPoint.point",
-        attributeNodes = @NamedAttributeNode("point")
-)
 @Table(name = "temp_point")
 @Getter
 @NoArgsConstructor
+@NamedEntityGraph(name = "TempPoint.point",
+        attributeNodes = @NamedAttributeNode("point")
+)
+// 상태가 NOT_CHANGED 인 labelerId에 해당하는 임시포인트의 합을 반환
+@NamedQuery(
+        name="TempPoint.sumTempPointByLabelerId",
+        query="select SUM(t.pointValue) " +
+                "from TempPoint t inner join t.point p " +
+                "where t.status = 'NOT_CHANGED' and p.labelerId = :labelerId"
+)
 public class TempPoint {
     @Id
     @Column(name = "id")

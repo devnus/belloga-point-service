@@ -1,0 +1,15 @@
+[[api-get-my-point-info]]
+== 내 포인트 조회 API
+내 임시포인트의 합과 포인트 정보를 조회합니다.
+
+====== 요청 형식
+include::{snippets}/get-my-point-info/http-request.adoc[]
+====== Request Body
+include::{snippets}/get-my-point-info/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/get-my-point-info/http-response.adoc[]
+include::{snippets}/get-my-point-info/response-fields.adoc[]
+====== Response Body
+include::{snippets}/get-my-point-info/response-body.adoc[]
+====== Try with curl
+include::{snippets}/get-my-point-info/curl-request.adoc[]

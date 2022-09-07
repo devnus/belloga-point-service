@@ -1,9 +1,11 @@
 package com.devnus.belloga.point.point.service;
 
+import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdException;
 import com.devnus.belloga.point.common.exception.error.NotFoundTempPointException;
 import com.devnus.belloga.point.point.domain.Point;
 import com.devnus.belloga.point.point.domain.TempPoint;
 import com.devnus.belloga.point.point.domain.TempPointStatus;
+import com.devnus.belloga.point.point.event.ResponsePoint;
 import com.devnus.belloga.point.point.repository.PointRepository;
 import com.devnus.belloga.point.point.repository.TempPointRepository;
 import lombok.RequiredArgsConstructor;
@@ -63,5 +65,23 @@ public class PointServiceImpl implements PointService {
                 .orElseThrow(()->new NotFoundTempPointException());
 
         tempPoint.changeTmpPointStatus(TempPointStatus.BLOCKED);
+    }
+
+    /**
+     * 나의 임시포인트들의 합과 포인트를 반환한다.
+     * @param labelerId
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ResponsePoint.MyPointInfo getMyPointInfo(String labelerId) {
+        Point point = pointRepository.findByLabelerId(labelerId)
+                .orElseThrow(()->new NotFoundLabelerIdException());
+        Long sumTempPoint = tempPointRepository.getSumTempPointByLabelerId(labelerId);
+
+        return ResponsePoint.MyPointInfo.builder()
+                .pointValue(point.getPointValue())
+                .tempPointValue(sumTempPoint)
+                .build();
     }
 }
