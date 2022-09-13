@@ -14,3 +14,5 @@ API 명세서 index.html이다.
 include::src/docs/asciidoc/exchange-to-stamp.adoc[]
 include::src/docs/asciidoc/get-my-stamp-info.adoc[]
 include::src/docs/asciidoc/get-my-point-info.adoc[]
+include::src/docs/asciidoc/get-all-gift-list.adoc[]
+include::src/docs/asciidoc/create-gift-project.adoc[]

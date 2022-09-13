@@ -22,3 +22,22 @@ CREATE TABLE stamp (
     labeler_id VARCHAR(255),
     stamp_value INT
 );
+
+/* Gift 테이블 */
+CREATE TABLE gift (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    admin_id VARCHAR(255),
+    title VARCHAR(63),
+    expected_draw_date DATE,
+    gift_type VARCHAR(63)
+);
+
+/* Gifticon 테이블 */
+CREATE TABLE gifticon (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(63),
+    code VARCHAR(63),
+    expired_date DATE,
+    gift_id BIGINT NOT NULL,
+    FOREIGN KEY(gift_id) REFERENCES gift(id)
+);
