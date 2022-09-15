@@ -36,13 +36,25 @@ public class GiftServiceImpl implements GiftService {
     }
 
     /**
-     * 생성된 모든 이벤트를 조회한다.
+     * 생성된 모든 이벤트를 조회한다. 당첨 확률도 반환한다.
      * @param pageable
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ResponseGift.GiftProject> getAllGiftProject(Pageable pageable) {
         Page<Gift> list = giftRepository.findAll(pageable);
-        return list.map(ResponseGift.GiftProject::of);
+        return list.map((gift) -> {
+            // 당첨확률은 gifticon 수 / 응모자 수 로 해당 gift 이벤트에 응모 시 당첨확률 구하기
+            float odds = 0;
+            if(gift.getGiftType().equals(GiftType.GIFTICON)) {
+                System.out.println(gift.getGifticonList().size());
+                System.out.println(gift.getApplyGiftList().size());
+                odds = gift.getGifticonList().size() / (float) (gift.getApplyGiftList().size() == 0 ? 1 : gift.getApplyGiftList().size());
+            }
+            if(odds > 1) odds = 1;
+            return ResponseGift.GiftProject.of(gift, odds);
+            }
+        );
     }
 }

@@ -15,12 +15,14 @@ public class ResponseGift {
         private String title;
         private GiftType giftType;
         private Date expectedDrawDate;
+        private float odds; // 당첨확률
 
-        public static GiftProject of(Gift gift) {
+        public static GiftProject of(Gift gift, float odds) {
             return GiftProject.builder()
                     .title(gift.getTitle())
                     .giftType(gift.getGiftType())
                     .expectedDrawDate(gift.getExpectedDrawDate())
+                    .odds(odds)
                     .build();
         }
     }

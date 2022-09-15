@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "gift")
@@ -30,6 +32,12 @@ public class Gift {
     @Column(name = "expected_draw_date")
     @Temporal(TemporalType.DATE)
     private Date expectedDrawDate;
+
+    @OneToMany(mappedBy = "gift", fetch = FetchType.LAZY)
+    private List<ApplyGift> applyGiftList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "gift", fetch = FetchType.LAZY)
+    private List<Gifticon> gifticonList = new ArrayList<>();
 
     @Builder
     public Gift(GiftType giftType, String title, String adminId, Date expectedDrawDate) {

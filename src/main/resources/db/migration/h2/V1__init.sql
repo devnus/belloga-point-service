@@ -41,3 +41,11 @@ CREATE TABLE gifticon (
     gift_id BIGINT NOT NULL,
     FOREIGN KEY(gift_id) REFERENCES gift(id)
 );
+
+/* apply gift 테이블 */
+CREATE TABLE apply_gift (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    gift_id BIGINT NOT NULL,
+    labeler_id VARCHAR(255),
+    FOREIGN KEY(gift_id) REFERENCES gift(id)
+);
