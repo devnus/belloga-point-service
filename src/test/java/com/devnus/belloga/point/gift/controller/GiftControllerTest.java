@@ -59,6 +59,7 @@ class GiftControllerTest {
                                 fieldWithPath("response.content.[].title").description("이벤트 제목"),
                                 fieldWithPath("response.content.[].giftType").description("이벤트 타입(기프티콘 등)"),
                                 fieldWithPath("response.content.[].expectedDrawDate").description("추첨일"),
+                                fieldWithPath("response.content.[].odds").description("응모하면 당첨될 확률"),
 
                                 fieldWithPath("response.pageable.sort.unsorted").description("페이징 처리 sort 정보"),
                                 fieldWithPath("response.pageable.sort.sorted").description("페이징 처리 sort 정보"),
