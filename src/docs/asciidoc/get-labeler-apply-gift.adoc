@@ -1,0 +1,15 @@
+[[api-get-labeler-apply-gift]]
+== Gift 응모 내역 조회 API
+라벨러가 자신이 신청한 응모 내역을 조회합니다.
+
+====== 요청 형식
+include::{snippets}/get-labeler-apply-gift/http-request.adoc[]
+====== Request Body
+include::{snippets}/get-labeler-apply-gift/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/get-labeler-apply-gift/http-response.adoc[]
+include::{snippets}/get-labeler-apply-gift/response-fields.adoc[]
+====== Response Body
+include::{snippets}/get-labeler-apply-gift/response-body.adoc[]
+====== Try with curl
+include::{snippets}/get-labeler-apply-gift/curl-request.adoc[]
