@@ -19,8 +19,9 @@ public class ApplyGift {
     @Column(name = "labeler_id")
     private String labelerId;
 
-    @Column(name = "winning")
-    private Boolean winning; //당첨 여부
+    @Column(name = "apply_status")
+    @Enumerated(EnumType.STRING)
+    private ApplyStatus applyStatus; //당첨 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gift_id")
@@ -30,6 +31,6 @@ public class ApplyGift {
     public ApplyGift(String labelerId, Gift gift) {
         this.labelerId = labelerId;
         this.gift = gift;
-        this.winning = null;
+        this.applyStatus = ApplyStatus.WAITING;
     }
 }
