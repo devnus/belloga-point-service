@@ -125,4 +125,38 @@ class GiftControllerTest {
                 ));
 
     }
+
+    @Transactional
+    @Test
+    void applyGiftTest () throws Exception {
+        //given
+        Map<String, String> input = new HashMap<>();
+        input.put("giftId", "1");
+        String labelerId = "jisung";
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/gift/v1/apply")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(input))
+                .header("labeler-id", labelerId)
+        )
+                //then
+                .andExpect(status().isOk())
+                .andDo(print())
+
+                //docs
+                .andDo(document("apply-gift",
+                        requestFields(
+                                fieldWithPath("giftId").description("지원할 이벤트(Gift) 아이디")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                                fieldWithPath("dateTime").description("response time"),
+                                fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response").description("null"),
+                                fieldWithPath("error").description("error 발생 시 에러 정보")
+                        )
+                ));
+
+    }
 }
