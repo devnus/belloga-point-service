@@ -47,5 +47,6 @@ CREATE TABLE apply_gift (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     gift_id BIGINT NOT NULL,
     labeler_id VARCHAR(255),
+    winning BOOLEAN,
     FOREIGN KEY(gift_id) REFERENCES gift(id)
 );

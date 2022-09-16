@@ -1,10 +1,17 @@
 package com.devnus.belloga.point.gift.service;
 
+import com.devnus.belloga.point.common.exception.error.InsufficientStampException;
+import com.devnus.belloga.point.common.exception.error.NotFoundGiftIdException;
+import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdException;
+import com.devnus.belloga.point.gift.domain.ApplyGift;
 import com.devnus.belloga.point.gift.domain.Gift;
 import com.devnus.belloga.point.gift.domain.GiftType;
 import com.devnus.belloga.point.gift.dto.ResponseGift;
+import com.devnus.belloga.point.gift.repository.ApplyGiftRepository;
 import com.devnus.belloga.point.gift.repository.GiftRepository;
 import com.devnus.belloga.point.gift.repository.GifticonRepository;
+import com.devnus.belloga.point.stamp.domain.Stamp;
+import com.devnus.belloga.point.stamp.repository.StampRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +25,9 @@ import java.util.Date;
 public class GiftServiceImpl implements GiftService {
     private final GiftRepository giftRepository;
     private final GifticonRepository gifticonRepository;
+    private final StampRepository stampRepository;
+    private final ApplyGiftRepository applyGiftRepository;
+
     /**
      * giftType으로 프로젝트를 생성한다.
      * @param adminId
@@ -56,5 +66,30 @@ public class GiftServiceImpl implements GiftService {
             return ResponseGift.GiftProject.of(gift, odds);
             }
         );
+    }
+
+    /**
+     * 이벤트 응모
+     */
+    @Override
+    public boolean createApplyGift(String labelerId, Long giftId) {
+        Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new NotFoundGiftIdException());
+        Stamp labelerStamp = stampRepository.findByLabelerId(labelerId).orElseThrow(() -> new NotFoundLabelerIdException());
+
+        //스탬프가 10개 미만으로 있을때
+        if(labelerStamp.getStampValue() < 10){
+            throw new InsufficientStampException();
+        }
+
+        //기프티콘 응모시 스템프 10개 감소
+        labelerStamp.decreaseStamp(10);
+
+        //응모 저장
+        ApplyGift applyGift = ApplyGift.builder()
+                .gift(gift)
+                .labelerId(labelerId).build();
+        applyGiftRepository.save(applyGift);
+
+        return true;
     }
 }
