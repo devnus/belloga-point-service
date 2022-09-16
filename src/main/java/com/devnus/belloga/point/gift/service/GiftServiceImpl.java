@@ -72,6 +72,7 @@ public class GiftServiceImpl implements GiftService {
      * 이벤트 응모
      */
     @Override
+    @Transactional
     public boolean createApplyGift(String labelerId, Long giftId) {
         Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new NotFoundGiftIdException());
         Stamp labelerStamp = stampRepository.findByLabelerId(labelerId).orElseThrow(() -> new NotFoundLabelerIdException());
@@ -91,5 +92,16 @@ public class GiftServiceImpl implements GiftService {
         applyGiftRepository.save(applyGift);
 
         return true;
+    }
+
+    /**
+     * 라벨러가 응모한 내용 조회
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ResponseGift.ApplyGiftInfo> findApplyGiftInfoByLabelerId(Pageable pageable, String labelerId) {
+        Page<ApplyGift> applyGifts = applyGiftRepository.findByLabelerId(pageable, labelerId);
+        Page<ResponseGift.ApplyGiftInfo> applyGiftInfos = applyGifts.map((ApplyGift applyGift) -> ResponseGift.ApplyGiftInfo.of(applyGift));
+        return applyGiftInfos;
     }
 }
