@@ -24,4 +24,12 @@ public class RequestGift {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private Date expectedDrawDate; // 추첨날짜
     }
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EnterGift {
+        @NotNull(message = "지원 할 gift 가 비어있음")
+        private Long giftId;
+    }
 }

@@ -47,4 +47,15 @@ public class GiftController {
                 .response(giftService.getAllGiftProject(pageable))
                 .build(), HttpStatus.OK);
     }
+
+    /**
+     * 이벤트에 응모한다
+     */
+    @PostMapping("/v1/apply")
+    public ResponseEntity<CommonResponse> applyGift(@GetAccountIdentification(role = UserRole.LABELER) String labelerId, @Valid @RequestBody RequestGift.EnterGift request) {
+
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(giftService.createApplyGift(labelerId, request.getGiftId()))
+                .build(), HttpStatus.OK);
+    }
 }
