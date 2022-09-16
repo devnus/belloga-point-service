@@ -159,4 +159,55 @@ class GiftControllerTest {
                 ));
 
     }
+
+    @Transactional
+    @Test
+    void getApplyGiftTest () throws Exception {
+        //given
+        String labelerId = "gildong";
+
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/gift/v1/apply")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("labeler-id", labelerId)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.response.content.[0].title", is("바나나 기프티콘 이벤트"))) // seed 참고
+                .andExpect(jsonPath("$.response.content.[1].title", is("초콜릿 기프티콘 이벤트")))
+
+                .andDo(print())
+                .andDo(document("get-labeler-apply-gift",
+                        responseFields(
+                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                                fieldWithPath("dateTime").description("response time"),
+                                fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response.content.[].title").description("이벤트 제목"),
+                                fieldWithPath("response.content.[].giftType").description("이벤트 타입(기프티콘 등)"),
+                                fieldWithPath("response.content.[].expectedDrawDate").description("추첨일"),
+                                fieldWithPath("response.content.[].applyStatus").description("당첨 여부"),
+
+                                fieldWithPath("response.pageable.sort.unsorted").description("페이징 처리 sort 정보"),
+                                fieldWithPath("response.pageable.sort.sorted").description("페이징 처리 sort 정보"),
+                                fieldWithPath("response.pageable.sort.empty").description("페이징 처리 sort 정보"),
+                                fieldWithPath("response.pageable.pageNumber").description("page number"),
+                                fieldWithPath("response.pageable.pageSize").description("page size"),
+                                fieldWithPath("response.pageable.offset").description("page offset"),
+                                fieldWithPath("response.pageable.paged").description("paged"),
+                                fieldWithPath("response.pageable.unpaged").description("unpaged"),
+                                fieldWithPath("response.totalPages").description("total pages"),
+                                fieldWithPath("response.totalElements").description("total elements"),
+                                fieldWithPath("response.last").description("last"),
+                                fieldWithPath("response.numberOfElements").description("numberOfElements"),
+                                fieldWithPath("response.size").description("size"),
+                                fieldWithPath("response.sort.unsorted").description("unsorted"),
+                                fieldWithPath("response.sort.sorted").description("sorted"),
+                                fieldWithPath("response.sort.empty").description("empty"),
+                                fieldWithPath("response.number").description("number"),
+                                fieldWithPath("response.first").description("first"),
+                                fieldWithPath("response.empty").description("empty"),
+                                fieldWithPath("error").description("error 발생 시 에러 정보")
+
+                        )
+                ));
+
+    }
 }
