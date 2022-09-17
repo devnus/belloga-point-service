@@ -47,4 +47,28 @@ public class GiftController {
                 .response(giftService.getAllGiftProject(pageable))
                 .build(), HttpStatus.OK);
     }
+
+    /**
+     * 이벤트에 응모한다
+     */
+    @PostMapping("/v1/apply")
+    public ResponseEntity<CommonResponse> applyGift(@GetAccountIdentification(role = UserRole.LABELER) String labelerId, @Valid @RequestBody RequestGift.EnterGift request) {
+
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(true)
+                .response(giftService.createApplyGift(labelerId, request.getGiftId()))
+                .build(), HttpStatus.OK);
+    }
+
+    /**
+     * 자신이 응모한 응모 내용 조회
+     */
+    @GetMapping("/v1/apply")
+    public ResponseEntity<CommonResponse> getApplyGift(@GetAccountIdentification(role = UserRole.LABELER) String labelerId, Pageable pageable) {
+
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(true)
+                .response(giftService.findApplyGiftInfoByLabelerId(pageable, labelerId))
+                .build(), HttpStatus.OK);
+    }
 }

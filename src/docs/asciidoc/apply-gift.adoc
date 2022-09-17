@@ -1,0 +1,15 @@
+[[api-apply-gift]]
+== Gift 신청 API
+스탬프를 이용해서 Gift 이벤트에 응모한다.
+
+====== 요청 형식
+include::{snippets}/apply-gift/http-request.adoc[]
+====== Request Body
+include::{snippets}/apply-gift/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/apply-gift/http-response.adoc[]
+include::{snippets}/apply-gift/response-fields.adoc[]
+====== Response Body
+include::{snippets}/apply-gift/response-body.adoc[]
+====== Try with curl
+include::{snippets}/apply-gift/curl-request.adoc[]
