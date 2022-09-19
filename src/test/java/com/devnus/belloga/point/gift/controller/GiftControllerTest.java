@@ -56,9 +56,11 @@ class GiftControllerTest {
                                 fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
                                 fieldWithPath("dateTime").description("response time"),
                                 fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response.content.[].id").description("이벤트 식별값"),
                                 fieldWithPath("response.content.[].title").description("이벤트 제목"),
                                 fieldWithPath("response.content.[].giftType").description("이벤트 타입(기프티콘 등)"),
                                 fieldWithPath("response.content.[].expectedDrawDate").description("추첨일"),
+                                fieldWithPath("response.content.[].giftStatus").description("gift 추첨 여부"),
                                 fieldWithPath("response.content.[].odds").description("응모하면 당첨될 확률"),
 
                                 fieldWithPath("response.pageable.sort.unsorted").description("페이징 처리 sort 정보"),
@@ -128,6 +130,7 @@ class GiftControllerTest {
 
     @Transactional
     @Test
+    @DisplayName("이벤트 응모 API 성공 테스트")
     void applyGiftTest () throws Exception {
         //given
         Map<String, String> input = new HashMap<>();
@@ -162,6 +165,7 @@ class GiftControllerTest {
 
     @Transactional
     @Test
+    @DisplayName("응모한 이벤트 조회 성공 테스트")
     void getApplyGiftTest () throws Exception {
         //given
         String labelerId = "gildong";
@@ -206,6 +210,42 @@ class GiftControllerTest {
                                 fieldWithPath("response.empty").description("empty"),
                                 fieldWithPath("error").description("error 발생 시 에러 정보")
 
+                        )
+                ));
+
+    }
+    @Transactional
+    @Test
+    @DisplayName("이벤트 추첨 API 성공 테스트")
+    void drawGiftTest () throws Exception {
+        //given
+        Map<String, String> input = new HashMap<>();
+        input.put("giftId", "1");
+        input.put("giftType", "GIFTICON");
+        String adminId = "dodo";
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/gift/v1/draw")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .header("admin-id", adminId)
+                )
+                //then
+                .andExpect(status().isOk())
+                .andDo(print())
+
+                //docs
+                .andDo(document("draw-gift",
+                        requestFields(
+                                fieldWithPath("giftId").description("추첨할 이벤트(Gift) 아이디"),
+                                fieldWithPath("giftType").description("추첨할 이벤트(Gift) 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                                fieldWithPath("dateTime").description("response time"),
+                                fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response").description("null"),
+                                fieldWithPath("error").description("error 발생 시 에러 정보")
                         )
                 ));
 
