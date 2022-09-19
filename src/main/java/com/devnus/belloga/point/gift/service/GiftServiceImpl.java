@@ -3,9 +3,7 @@ package com.devnus.belloga.point.gift.service;
 import com.devnus.belloga.point.common.exception.error.InsufficientStampException;
 import com.devnus.belloga.point.common.exception.error.NotFoundGiftIdException;
 import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdException;
-import com.devnus.belloga.point.gift.domain.ApplyGift;
-import com.devnus.belloga.point.gift.domain.Gift;
-import com.devnus.belloga.point.gift.domain.GiftType;
+import com.devnus.belloga.point.gift.domain.*;
 import com.devnus.belloga.point.gift.dto.ResponseGift;
 import com.devnus.belloga.point.gift.repository.ApplyGiftRepository;
 import com.devnus.belloga.point.gift.repository.GiftRepository;
@@ -19,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -103,5 +104,43 @@ public class GiftServiceImpl implements GiftService {
         Page<ApplyGift> applyGifts = applyGiftRepository.findByLabelerId(pageable, labelerId);
         Page<ResponseGift.ApplyGiftInfo> applyGiftInfos = applyGifts.map((ApplyGift applyGift) -> ResponseGift.ApplyGiftInfo.of(applyGift));
         return applyGiftInfos;
+    }
+
+
+    /**
+     * 기프티콘 이벤트 추첨을 진행한다. Gift 상태를 Done으로 바꾸고 응모자에게 win, lose를 줌
+     * @param giftId
+     */
+    @Override
+    @Transactional
+    public void drawGifticonEvent(String adminId, Long giftId) {
+        Gift gift = giftRepository.findByIdFetchGifticon(giftId)
+                .orElseThrow(()->new NotFoundGiftIdException());
+
+        // 응모자 id 추출
+        List<Long> ids = new LinkedList<>();
+        gift.getApplyGiftList().forEach(applyGift -> ids.add(applyGift.getId()));
+
+        // 응모자에게 전부 LOSE를 부여
+        applyGiftRepository.bulkUpdateToChangeStatus(ids, ApplyStatus.LOSE);
+        //  N명에게만 WIN 부여
+        List<Long> wins = new LinkedList<>();
+        int count = 0; // 추출한 사람 수
+        // 기프티콘 개수만큼 반복문을 돌려 승리자 추출
+        for(int i = 0 ; i < gift.getGifticonList().size() ; i++) {
+            int randomIdx = (int) (Math.random() * (gift.getApplyGiftList().size() - 1));
+            // 이미 추출한 숫자이며 뽑을 사람이 아직 남아있는 경우 다시뽑기
+            while (wins.contains(ids.get(randomIdx)) && count < gift.getApplyGiftList().size()) {
+                randomIdx = (int) (Math.random() * (gift.getApplyGiftList().size() - 1));
+            }
+            wins.add(ids.get(randomIdx));
+            count++;
+        }
+        applyGiftRepository.bulkUpdateToChangeStatus(wins, ApplyStatus.WIN);
+        // WIN 에게 푸시 알림 보내기
+        //
+
+        // gift를 done으로 바꾼다.
+        gift.changeGiftStatus(GiftStatus.DONE);
     }
 }

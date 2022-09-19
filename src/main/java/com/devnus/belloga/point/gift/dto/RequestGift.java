@@ -32,4 +32,15 @@ public class RequestGift {
         @NotNull(message = "지원 할 gift 가 비어있음")
         private Long giftId;
     }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DrawGift {
+        @NotNull(message = "gift id가 비어있음")
+        private Long giftId;
+        @NotNull(message = "gift type이 비어있음")
+        private GiftType giftType;
+    }
 }
