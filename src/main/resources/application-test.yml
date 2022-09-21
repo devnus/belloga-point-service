@@ -26,17 +26,19 @@ spring:
         format_sql: true
 
   kafka:
+    bootstrap-servers: localhost:9092
     producer:
-      bootstrap-servers: 13.209.250.13:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       auto-offset-reset: earliest
-      bootstrap-servers: 13.209.250.13:9092
       enable-auto-commit: true
 
 app:
   stamp:
     point-ratio: 10
 
+  topic:
     labeled-data:
       pay-tmp-point-to-labeler: pay-tmp-point-to-labeler
       change-tmp-point-to-point: change-tmp-point-to-point # 임시포인트를 실제 포인트로 변환 이벤트
