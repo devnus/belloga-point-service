@@ -72,7 +72,6 @@ public class GiftController {
                 .response(giftService.findApplyGiftInfoByLabelerId(pageable, labelerId))
                 .build(), HttpStatus.OK);
     }
-
     /**
      * 이벤트 추첨을 진행한다. Gift 상태를 Done으로 바꾸고 응모자에게 win, lose를 줌
      * @param dto

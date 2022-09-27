@@ -1,13 +1,9 @@
 package com.devnus.belloga.point.gift.dto;
 
 import com.devnus.belloga.point.gift.domain.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ResponseGift {
