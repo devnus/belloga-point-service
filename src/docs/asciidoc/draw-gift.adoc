@@ -1,0 +1,15 @@
+[[api-draw-gift]]
+== Gift 신청 API
+어드민이 이벤트를 추첨해서 응모자 중 승리자를 뽑는다.
+
+====== 요청 형식
+include::{snippets}/draw-gift/http-request.adoc[]
+====== Request Body
+include::{snippets}/draw-gift/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/draw-gift/http-response.adoc[]
+include::{snippets}/draw-gift/response-fields.adoc[]
+====== Response Body
+include::{snippets}/draw-gift/response-body.adoc[]
+====== Try with curl
+include::{snippets}/draw-gift/curl-request.adoc[]

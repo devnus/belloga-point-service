@@ -5,14 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "gift")
 @Getter
 @NoArgsConstructor
+@NamedEntityGraph(name = "Gift.fetchGifticon", attributeNodes = {
+        @NamedAttributeNode("applyGiftList"),
+        @NamedAttributeNode("gifticonList")
+})
 public class Gift {
     @Id
     @Column(name = "id")
@@ -29,15 +31,19 @@ public class Gift {
     @Enumerated(EnumType.STRING)
     private GiftType giftType;
 
+    @Column(name = "gift_status")
+    @Enumerated(EnumType.STRING)
+    private GiftStatus giftStatus;
+
     @Column(name = "expected_draw_date")
     @Temporal(TemporalType.DATE)
     private Date expectedDrawDate;
 
     @OneToMany(mappedBy = "gift", fetch = FetchType.LAZY)
-    private List<ApplyGift> applyGiftList = new ArrayList<>();
+    private Set<ApplyGift> applyGiftList = new HashSet<>();
 
     @OneToMany(mappedBy = "gift", fetch = FetchType.LAZY)
-    private List<Gifticon> gifticonList = new ArrayList<>();
+    private Set<Gifticon> gifticonList = new HashSet<>();
 
     @Builder
     public Gift(GiftType giftType, String title, String adminId, Date expectedDrawDate) {
@@ -45,5 +51,10 @@ public class Gift {
         this.giftType = giftType;
         this.title = title;
         this.expectedDrawDate = expectedDrawDate;
+        this.giftStatus = GiftStatus.WAITING;
+    }
+
+    public void changeGiftStatus(GiftStatus giftStatus) {
+        this.giftStatus = giftStatus;
     }
 }

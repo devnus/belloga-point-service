@@ -3,6 +3,7 @@ package com.devnus.belloga.point.gift.controller;
 import com.devnus.belloga.point.common.aop.annotation.GetAccountIdentification;
 import com.devnus.belloga.point.common.aop.annotation.UserRole;
 import com.devnus.belloga.point.common.dto.CommonResponse;
+import com.devnus.belloga.point.gift.domain.GiftType;
 import com.devnus.belloga.point.gift.dto.RequestGift;
 import com.devnus.belloga.point.gift.service.GiftService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,20 @@ public class GiftController {
         return new ResponseEntity<>(CommonResponse.builder()
                 .success(true)
                 .response(giftService.findApplyGiftInfoByLabelerId(pageable, labelerId))
+                .build(), HttpStatus.OK);
+    }
+    /**
+     * 이벤트 추첨을 진행한다. Gift 상태를 Done으로 바꾸고 응모자에게 win, lose를 줌
+     * @param dto
+     * @return
+     */
+    @PostMapping("/v1/draw")
+    public ResponseEntity<CommonResponse> drawGift(@GetAccountIdentification(role = UserRole.ADMIN) String adminId, @Valid @RequestBody RequestGift.DrawGift dto) {
+        if(dto.getGiftType().equals(GiftType.GIFTICON)) {
+            giftService.drawGifticonEvent(adminId, dto.getGiftId());
+        }
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(true)
                 .build(), HttpStatus.OK);
     }
 }
