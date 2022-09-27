@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.point.domain;
 
+import com.devnus.belloga.point.common.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @Table(name = "point")
 @Getter
 @NoArgsConstructor
-public class Point {
+public class Point extends BaseTimeEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.point.domain;
 
+import com.devnus.belloga.point.common.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ import javax.persistence.*;
                 "from TempPoint t inner join t.point p " +
                 "where t.status = 'NOT_CHANGED' and p.labelerId = :labelerId"
 )
-public class TempPoint {
+public class TempPoint extends BaseTimeEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
