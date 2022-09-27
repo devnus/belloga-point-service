@@ -3,6 +3,8 @@
 CREATE TABLE point (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     labeler_id VARCHAR(255),
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
     point_value BIGINT
 );
 
@@ -13,6 +15,8 @@ CREATE TABLE temp_point (
     point_value BIGINT,
     point_id BIGINT,
     status VARCHAR(15),
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
     FOREIGN KEY(point_id) REFERENCES point(id)
 );
 
@@ -20,6 +24,8 @@ CREATE TABLE temp_point (
 CREATE TABLE stamp (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     labeler_id VARCHAR(255),
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
     stamp_value INT
 );
 
@@ -29,6 +35,8 @@ CREATE TABLE gift (
     admin_id VARCHAR(255),
     title VARCHAR(63),
     expected_draw_date DATE,
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
     gift_type VARCHAR(63)
 );
 
@@ -39,6 +47,8 @@ CREATE TABLE gifticon (
     code VARCHAR(63),
     expired_date DATE,
     gift_id BIGINT NOT NULL,
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
     FOREIGN KEY(gift_id) REFERENCES gift(id)
 );
 
@@ -48,5 +58,7 @@ CREATE TABLE apply_gift (
     gift_id BIGINT NOT NULL,
     labeler_id VARCHAR(255),
     apply_status VARCHAR(255),
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
     FOREIGN KEY(gift_id) REFERENCES gift(id)
 );

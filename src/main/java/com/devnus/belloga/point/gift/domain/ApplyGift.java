@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.gift.domain;
 
+import com.devnus.belloga.point.common.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "apply_gift")
 @Getter
 @NoArgsConstructor
-public class ApplyGift {
+public class ApplyGift extends BaseTimeEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.stamp.domain;
 
+import com.devnus.belloga.point.common.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "stamp")
 @Getter
 @NoArgsConstructor
-public class Stamp {
+public class Stamp extends BaseTimeEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.gift.domain;
 
+import com.devnus.belloga.point.common.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.Date;
 @Table(name = "gifticon")
 @Getter
 @NoArgsConstructor
-public class Gifticon {
+public class Gifticon extends BaseTimeEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
