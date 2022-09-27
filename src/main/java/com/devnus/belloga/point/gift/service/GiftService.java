@@ -12,4 +12,5 @@ public interface GiftService {
     Page<ResponseGift.GiftProject> getAllGiftProject(Pageable pageable);
     boolean createApplyGift(String labelerId, Long giftId);
     Page<ResponseGift.ApplyGiftInfo> findApplyGiftInfoByLabelerId(Pageable pageable, String labelerId);
+    void drawGifticonEvent(String adminId, Long giftId);
 }

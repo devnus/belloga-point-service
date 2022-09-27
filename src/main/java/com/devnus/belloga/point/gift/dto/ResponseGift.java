@@ -1,16 +1,9 @@
 package com.devnus.belloga.point.gift.dto;
 
-import com.devnus.belloga.point.gift.domain.ApplyGift;
-import com.devnus.belloga.point.gift.domain.ApplyStatus;
-import com.devnus.belloga.point.gift.domain.Gift;
-import com.devnus.belloga.point.gift.domain.GiftType;
-import lombok.AllArgsConstructor;
+import com.devnus.belloga.point.gift.domain.*;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ResponseGift {
@@ -18,16 +11,20 @@ public class ResponseGift {
     @Builder
     @Data
     public static class GiftProject {
+        private Long id;
         private String title;
         private GiftType giftType;
         private Date expectedDrawDate;
+        private GiftStatus giftStatus;
         private float odds; // 당첨확률
 
         public static GiftProject of(Gift gift, float odds) {
             return GiftProject.builder()
+                    .id(gift.getId())
                     .title(gift.getTitle())
                     .giftType(gift.getGiftType())
                     .expectedDrawDate(gift.getExpectedDrawDate())
+                    .giftStatus(gift.getGiftStatus())
                     .odds(odds)
                     .build();
         }

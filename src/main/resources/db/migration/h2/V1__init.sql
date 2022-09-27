@@ -34,6 +34,7 @@ CREATE TABLE gift (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     admin_id VARCHAR(255),
     title VARCHAR(63),
+    gift_status VARCHAR(31),
     expected_draw_date DATE,
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
