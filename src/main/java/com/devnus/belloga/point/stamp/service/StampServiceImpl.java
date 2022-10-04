@@ -39,7 +39,7 @@ public class StampServiceImpl implements StampService {
         if(point.getPointValue() - pointRatio < 0) throw new InsufficientPointException();
 
         Stamp stamp = stampRepository.findByLabelerId(labelerId)
-                .orElseGet(null);
+                .orElseGet(()->null);
 
         if(stamp == null) {
             stamp = stampRepository.save(Stamp.builder()
@@ -55,7 +55,7 @@ public class StampServiceImpl implements StampService {
     @Transactional()
     public ResponseStamp.MyStampInfo getMyStampInfo(String labelerId) {
         Stamp stamp = stampRepository.findByLabelerId(labelerId)
-                .orElseGet(null);
+                .orElseGet(()->null);
 
         if(stamp == null) {
             stamp = stampRepository.save(Stamp.builder()
