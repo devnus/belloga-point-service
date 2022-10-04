@@ -73,10 +73,16 @@ public class PointServiceImpl implements PointService {
      * @return
      */
     @Override
-    @Transactional(readOnly = true)
+    @Transactional()
     public ResponsePoint.MyPointInfo getMyPointInfo(String labelerId) {
         Point point = pointRepository.findByLabelerId(labelerId)
-                .orElseThrow(()->new NotFoundLabelerIdException());
+                .orElseGet(()->null);
+        if(point == null) {
+            point = pointRepository.save(Point.builder()
+                            .pointValue(0L)
+                            .labelerId(labelerId)
+                    .build());
+        }
         Long sumTempPoint = tempPointRepository.getSumTempPointByLabelerId(labelerId);
 
         return ResponsePoint.MyPointInfo.builder()
