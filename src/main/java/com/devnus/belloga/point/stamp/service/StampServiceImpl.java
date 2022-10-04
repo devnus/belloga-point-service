@@ -52,10 +52,17 @@ public class StampServiceImpl implements StampService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional()
     public ResponseStamp.MyStampInfo getMyStampInfo(String labelerId) {
         Stamp stamp = stampRepository.findByLabelerId(labelerId)
-                .orElseThrow(()->new NotFoundLabelerIdException());
+                .orElseGet(null);
+
+        if(stamp == null) {
+            stamp = stampRepository.save(Stamp.builder()
+                            .labelerId(labelerId)
+                    .build());
+        }
+
         return ResponseStamp.MyStampInfo.of(stamp);
     }
 }
