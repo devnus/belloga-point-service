@@ -39,7 +39,13 @@ public class StampServiceImpl implements StampService {
         if(point.getPointValue() - pointRatio < 0) throw new InsufficientPointException();
 
         Stamp stamp = stampRepository.findByLabelerId(labelerId)
-                .orElseThrow(()->new NotFoundLabelerIdException());
+                .orElseGet(null);
+
+        if(stamp == null) {
+            stamp = stampRepository.save(Stamp.builder()
+                            .labelerId(labelerId)
+                    .build());
+        }
 
         point.decreasePoint(pointRatio); // 포인트 감소시킨다.
         stamp.increaseStamp(1); // 개수를 1 증가시킨다.
