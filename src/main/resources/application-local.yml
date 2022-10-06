@@ -36,7 +36,7 @@ spring:
 
 app:
   stamp:
-    point-ratio: 10
+    point-ratio: 0
 
   topic:
     labeled-data:
