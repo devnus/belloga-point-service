@@ -42,7 +42,7 @@ public class StampServiceImpl implements StampService {
                 .orElseGet(()->null);
 
         if(stamp == null) {
-            stamp = stampRepository.save(Stamp.builder()
+            stamp = stampRepository.saveAndFlush(Stamp.builder()
                             .labelerId(labelerId)
                     .build());
         }
@@ -52,13 +52,13 @@ public class StampServiceImpl implements StampService {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public ResponseStamp.MyStampInfo getMyStampInfo(String labelerId) {
         Stamp stamp = stampRepository.findByLabelerId(labelerId)
                 .orElseGet(()->null);
 
         if(stamp == null) {
-            stamp = stampRepository.save(Stamp.builder()
+            stamp = stampRepository.saveAndFlush(Stamp.builder()
                             .labelerId(labelerId)
                     .build());
         }
