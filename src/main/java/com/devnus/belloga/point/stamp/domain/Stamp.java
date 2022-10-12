@@ -16,15 +16,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Stamp extends BaseTimeEntity {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "labeler_id")
     private String labelerId;
 
     @Column(name = "stamp_value")
     private Integer stampValue;
+
+    @Version
+    private Long version;
 
     @Builder
     public Stamp(String labelerId) {

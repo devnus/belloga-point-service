@@ -19,15 +19,14 @@ import java.util.List;
 @NoArgsConstructor
 public class Point extends BaseTimeEntity {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "labeler_id")
     private String labelerId;
 
     @Column(name = "point_value")
     private Long pointValue;
+
+    @Version
+    private Long version;
 
     @OneToMany(mappedBy = "point", cascade = CascadeType.PERSIST)
     private List<TempPoint> tempPointList = new ArrayList<>();

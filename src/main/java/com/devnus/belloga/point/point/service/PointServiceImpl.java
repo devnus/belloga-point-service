@@ -77,8 +77,9 @@ public class PointServiceImpl implements PointService {
     public ResponsePoint.MyPointInfo getMyPointInfo(String labelerId) {
         Point point = pointRepository.findByLabelerId(labelerId)
                 .orElseGet(()->null);
+
         if(point == null) {
-            point = pointRepository.saveAndFlush(Point.builder()
+            point = pointRepository.save(Point.builder()
                             .pointValue(0L)
                             .labelerId(labelerId)
                     .build());

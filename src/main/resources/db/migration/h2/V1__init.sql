@@ -1,10 +1,10 @@
 /* point 테이블 */
 
 CREATE TABLE point (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    labeler_id VARCHAR(255),
+    labeler_id VARCHAR(255) PRIMARY KEY,
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
+    version BIGINT,
     point_value BIGINT
 );
 
@@ -13,19 +13,19 @@ CREATE TABLE temp_point (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     labeling_uuid VARCHAR(255),
     point_value BIGINT,
-    point_id BIGINT,
+    point_id VARCHAR(255),
     status VARCHAR(15),
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
-    FOREIGN KEY(point_id) REFERENCES point(id)
+    FOREIGN KEY(point_id) REFERENCES point(labeler_id)
 );
 
 /* Stamp 테이블 */
 CREATE TABLE stamp (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    labeler_id VARCHAR(255),
+    labeler_id VARCHAR(255) PRIMARY KEY,
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
+    version BIGINT,
     stamp_value INT
 );
 
