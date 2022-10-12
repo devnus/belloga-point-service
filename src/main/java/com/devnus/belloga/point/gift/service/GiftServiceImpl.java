@@ -59,8 +59,6 @@ public class GiftServiceImpl implements GiftService {
             // 당첨확률은 gifticon 수 / 응모자 수 로 해당 gift 이벤트에 응모 시 당첨확률 구하기
             float odds = 0;
             if(gift.getGiftType().equals(GiftType.GIFTICON)) {
-                System.out.println(gift.getGifticonList().size());
-                System.out.println(gift.getApplyGiftList().size());
                 odds = gift.getGifticonList().size() / (float) (gift.getApplyGiftList().size() == 0 ? 1 : gift.getApplyGiftList().size());
             }
             if(odds > 1) odds = 1;
@@ -78,13 +76,13 @@ public class GiftServiceImpl implements GiftService {
         Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new NotFoundGiftIdException());
         Stamp labelerStamp = stampRepository.findByLabelerId(labelerId).orElseThrow(() -> new NotFoundLabelerIdException());
 
-        //스탬프가 10개 미만으로 있을때
-        if(labelerStamp.getStampValue() < 10){
+        //스탬프가 8개 미만으로 있을때
+        if(labelerStamp.getStampValue() < 8){
             throw new InsufficientStampException();
         }
 
-        //기프티콘 응모시 스템프 10개 감소
-        labelerStamp.decreaseStamp(10);
+        //기프티콘 응모시 스템프 8개 감소
+        labelerStamp.decreaseStamp(8);
 
         //응모 저장
         ApplyGift applyGift = ApplyGift.builder()

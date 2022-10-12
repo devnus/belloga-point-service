@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface ApplyGiftRepository extends JpaRepository<ApplyGift, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update ApplyGift ag SET ag.applyStatus = :applyStatus where ag.id in :ids")
-    void bulkUpdateToChangeStatus(List<Long> ids, ApplyStatus applyStatus);
+    void bulkUpdateToChangeStatus(@Param("ids") List<Long> ids, @Param("applyStatus") ApplyStatus applyStatus);
 }
