@@ -38,6 +38,7 @@ public class ResponseGift {
     @Data
     public static class ApplyGiftInfo {
         private Long id;
+        private Long giftId;
         private String title;
         private GiftType giftType;
         private Date expectedDrawDate;
@@ -46,6 +47,7 @@ public class ResponseGift {
         public static ApplyGiftInfo of(ApplyGift applyGift) {
             return ApplyGiftInfo.builder()
                     .id(applyGift.getId())
+                    .giftId(applyGift.getGift().getId())
                     .title(applyGift.getGift().getTitle())
                     .giftType(applyGift.getGift().getGiftType())
                     .expectedDrawDate(applyGift.getGift().getExpectedDrawDate())
