@@ -22,9 +22,6 @@ public class Stamp extends BaseTimeEntity {
     @Column(name = "stamp_value")
     private Integer stampValue;
 
-    @Version
-    private Long version;
-
     @Builder
     public Stamp(String labelerId) {
         this.stampValue = 0;

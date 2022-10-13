@@ -4,7 +4,6 @@ CREATE TABLE point (
     labeler_id VARCHAR(255) PRIMARY KEY,
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
-    version BIGINT,
     point_value BIGINT
 );
 
@@ -25,7 +24,6 @@ CREATE TABLE stamp (
     labeler_id VARCHAR(255) PRIMARY KEY,
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
-    version BIGINT,
     stamp_value INT
 );
 

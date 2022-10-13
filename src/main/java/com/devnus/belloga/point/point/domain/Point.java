@@ -25,9 +25,6 @@ public class Point extends BaseTimeEntity {
     @Column(name = "point_value")
     private Long pointValue;
 
-    @Version
-    private Long version;
-
     @OneToMany(mappedBy = "point", cascade = CascadeType.PERSIST)
     private List<TempPoint> tempPointList = new ArrayList<>();
 

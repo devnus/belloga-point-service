@@ -58,7 +58,7 @@ public class StampServiceImpl implements StampService {
                 .orElseGet(()->null);
 
         if(stamp == null) {
-            stamp = stampRepository.saveAndFlush(Stamp.builder()
+            stamp = stampRepository.save(Stamp.builder()
                             .labelerId(labelerId)
                     .build());
         }
