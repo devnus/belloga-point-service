@@ -6,6 +6,7 @@ import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdExceptio
 import com.devnus.belloga.point.gift.domain.*;
 import com.devnus.belloga.point.gift.dto.EventCloudMessagingToken;
 import com.devnus.belloga.point.gift.dto.ResponseGift;
+import com.devnus.belloga.point.gift.dto.ResponseUser;
 import com.devnus.belloga.point.gift.event.GiftProducer;
 import com.devnus.belloga.point.gift.repository.ApplyGiftRepository;
 import com.devnus.belloga.point.gift.repository.GiftRepository;
@@ -31,6 +32,7 @@ public class GiftServiceImpl implements GiftService {
     private final StampRepository stampRepository;
     private final ApplyGiftRepository applyGiftRepository;
     private final GiftProducer giftProducer;
+    private final UserWebClient userWebClient;
 
     /**
      * giftType으로 프로젝트를 생성한다.
@@ -156,5 +158,24 @@ public class GiftServiceImpl implements GiftService {
 
         // gift를 done으로 바꾼다.
         gift.changeGiftStatus(GiftStatus.DONE);
+    }
+
+    /**
+     * Gift에 대한 당첨자 정보 조회
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ResponseUser.LabelerInfo> findGiftWinners(Pageable pageable, Long giftId) {
+        Page<ApplyGift> applyGifts = applyGiftRepository.findByGiftIdAndApplyStatus(pageable, giftId, ApplyStatus.WIN);
+
+        Page<ResponseUser.LabelerInfo> giftWinners = applyGifts.map((ApplyGift applyGift) -> {
+
+            //동기 통신을 통해 라벨러 정보를 가져온다
+            ResponseUser.LabelerInfo labelerInfo = userWebClient.getLabelerInfo(applyGift.getLabelerId());
+
+            return labelerInfo;
+        });
+
+        return giftWinners;
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface ApplyGiftRepository extends JpaRepository<ApplyGift, Long> {
     Page<ApplyGift> findByLabelerId(Pageable pageable, String LabelerId);
+    Page<ApplyGift> findByGiftIdAndApplyStatus(Pageable pageable, Long giftId, ApplyStatus applyStatus);
 
     @Modifying(clearAutomatically = true)
     @Query("update ApplyGift ag SET ag.applyStatus = :applyStatus where ag.id in :ids")

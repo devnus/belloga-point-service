@@ -12,3 +12,7 @@ INSERT INTO apply_gift(gift_id, labeler_id, apply_status) VALUES(2, 'gildong', '
 INSERT INTO apply_gift(gift_id, labeler_id, apply_status) VALUES(2, 'gildong', 'WAITING');
 INSERT INTO apply_gift(gift_id, labeler_id, apply_status) VALUES(2, 'gildong', 'WAITING');
 INSERT INTO apply_gift(gift_id, labeler_id, apply_status) VALUES(2, 'gildong', 'WAITING');
+
+INSERT INTO apply_gift(gift_id, labeler_id, apply_status) VALUES(1, 'labeler-account-id', 'WIN');
+
+

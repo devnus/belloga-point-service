@@ -2,6 +2,7 @@ package com.devnus.belloga.point.gift.service;
 
 import com.devnus.belloga.point.gift.domain.GiftType;
 import com.devnus.belloga.point.gift.dto.ResponseGift;
+import com.devnus.belloga.point.gift.dto.ResponseUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +14,5 @@ public interface GiftService {
     boolean createApplyGift(String labelerId, Long giftId);
     Page<ResponseGift.ApplyGiftInfo> findApplyGiftInfoByLabelerId(Pageable pageable, String labelerId);
     void drawGifticonEvent(String adminId, Long giftId);
+    Page<ResponseUser.LabelerInfo> findGiftWinners(Pageable pageable, Long giftId);
 }
