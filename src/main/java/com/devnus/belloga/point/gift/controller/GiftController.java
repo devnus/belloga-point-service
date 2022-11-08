@@ -86,4 +86,16 @@ public class GiftController {
                 .success(true)
                 .build(), HttpStatus.OK);
     }
+
+    /**
+     * 해당 Gift에 대한 당첨자 정보 조회
+     */
+    @GetMapping("/v1/{giftId}/winners")
+    public ResponseEntity<CommonResponse> getGiftWinners(@GetAccountIdentification(role = UserRole.ADMIN) String adminId, @PathVariable Long giftId, Pageable pageable) {
+
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(true)
+                .response(giftService.findGiftWinners(pageable, giftId))
+                .build(), HttpStatus.OK);
+    }
 }

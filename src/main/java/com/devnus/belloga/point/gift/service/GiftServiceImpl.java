@@ -4,7 +4,10 @@ import com.devnus.belloga.point.common.exception.error.InsufficientStampExceptio
 import com.devnus.belloga.point.common.exception.error.NotFoundGiftIdException;
 import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdException;
 import com.devnus.belloga.point.gift.domain.*;
+import com.devnus.belloga.point.gift.dto.EventCloudMessagingToken;
 import com.devnus.belloga.point.gift.dto.ResponseGift;
+import com.devnus.belloga.point.gift.dto.ResponseUser;
+import com.devnus.belloga.point.gift.event.GiftProducer;
 import com.devnus.belloga.point.gift.repository.ApplyGiftRepository;
 import com.devnus.belloga.point.gift.repository.GiftRepository;
 import com.devnus.belloga.point.gift.repository.GifticonRepository;
@@ -28,6 +31,8 @@ public class GiftServiceImpl implements GiftService {
     private final GifticonRepository gifticonRepository;
     private final StampRepository stampRepository;
     private final ApplyGiftRepository applyGiftRepository;
+    private final GiftProducer giftProducer;
+    private final UserWebClient userWebClient;
 
     /**
      * giftType으로 프로젝트를 생성한다.
@@ -135,10 +140,42 @@ public class GiftServiceImpl implements GiftService {
             count++;
         }
         applyGiftRepository.bulkUpdateToChangeStatus(wins, ApplyStatus.WIN);
+
         // WIN 에게 푸시 알림 보내기
-        //
+        for(int i = 0; i < wins.size(); i++){
+
+            ApplyGift applyGift  = applyGiftRepository.findById(wins.get(i)).orElseThrow(() -> new NotFoundGiftIdException());
+
+            giftProducer.winNotice(EventCloudMessagingToken.MessageByToken.builder()
+                            .androidPriority(AndroidPriority.HIGH)
+                            .apnsPriority(ApnsPriority.TEN)
+                            .apnsPushType(ApnsPushType.ALERT)
+                            .userId(applyGift.getLabelerId())
+                            .title("이벤트 추첨 안내")
+                            .body("축하합니다 이벤트에 당첨되셨습니다!")
+                            .clickLink(" ").build());
+        }
 
         // gift를 done으로 바꾼다.
         gift.changeGiftStatus(GiftStatus.DONE);
+    }
+
+    /**
+     * Gift에 대한 당첨자 정보 조회
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ResponseUser.LabelerInfo> findGiftWinners(Pageable pageable, Long giftId) {
+        Page<ApplyGift> applyGifts = applyGiftRepository.findByGiftIdAndApplyStatus(pageable, giftId, ApplyStatus.WIN);
+
+        Page<ResponseUser.LabelerInfo> giftWinners = applyGifts.map((ApplyGift applyGift) -> {
+
+            //동기 통신을 통해 라벨러 정보를 가져온다
+            ResponseUser.LabelerInfo labelerInfo = userWebClient.getLabelerInfo(applyGift.getLabelerId());
+
+            return labelerInfo;
+        });
+
+        return giftWinners;
     }
 }

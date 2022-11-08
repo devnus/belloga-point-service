@@ -1,0 +1,15 @@
+[[api-get-gift-winners]]
+== Gift 당첨자 조회 API
+관리자가 해당 Gift에 당첨된 라벨러들을 조회합니다.
+
+====== 요청 형식
+include::{snippets}/get-gift-winners/http-request.adoc[]
+====== Request Body
+include::{snippets}/get-gift-winners/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/get-gift-winners/http-response.adoc[]
+include::{snippets}/get-gift-winners/response-fields.adoc[]
+====== Response Body
+include::{snippets}/get-gift-winners/response-body.adoc[]
+====== Try with curl
+include::{snippets}/get-gift-winners/curl-request.adoc[]

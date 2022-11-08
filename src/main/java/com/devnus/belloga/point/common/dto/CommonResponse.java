@@ -1,14 +1,18 @@
 package com.devnus.belloga.point.common.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommonResponse {
     @Builder.Default
     private String id = UUID.randomUUID().toString();
