@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.gift.controller;
 
+import com.devnus.belloga.point.gift.service.GiftService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -14,11 +16,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,6 +42,9 @@ class GiftControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private GiftService giftService;
 
     @Test
     @DisplayName("이벤트 프로젝트 조회 API 성공 테스트")
@@ -88,6 +95,52 @@ class GiftControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("기프티콘 추가 API 성공 테스트")
+    void createGifticonToGiftProject () throws Exception {
+        //given
+        Long giftId = 1L;
+        String title = "스타벅스 아메리카노";
+        String code = "123-123-123-123-123";
+        Date expectedDrawDate = new Date();
+        Map<String, String> input = new HashMap<>();
+        input.put("giftId", String.valueOf(giftId));
+        input.put("title", title);
+        input.put("code", code);
+        input.put("expectedDrawDate", "2023-11-11");
+
+        String adminId = "dusik";
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/gift/v1/gifticon")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .header("admin-id", adminId) // 유저의 식별아이디, api gateway에서 받아온다.
+                )
+                //then
+                .andExpect(status().isOk())
+                .andDo(print())
+
+                //docs
+                .andDo(document("add-gifticon",
+                        requestFields(
+                                fieldWithPath("giftId").description("추가하고자하는 giftId"),
+                                fieldWithPath("title").description("기프티콘 제목"),
+                                fieldWithPath("code").description("기프티콘 코드"),
+                                fieldWithPath("expectedDrawDate").description("만료일")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                                fieldWithPath("dateTime").description("response time"),
+                                fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response").description("null"),
+                                fieldWithPath("error").description("error 발생 시 에러 정보")
+                        )
+                ));
+
+    }
+
 
     @Transactional
     @Test
@@ -140,10 +193,10 @@ class GiftControllerTest {
 
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/gift/v1/apply")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(input))
-                .header("labeler-id", labelerId)
-        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .header("labeler-id", labelerId)
+                )
                 //then
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -172,9 +225,9 @@ class GiftControllerTest {
         String labelerId = "gildong";
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/gift/v1/apply")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("labeler-id", labelerId)
-        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("labeler-id", labelerId)
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response.content.[0].title", is("바나나 기프티콘 이벤트"))) // seed 참고
                 .andExpect(jsonPath("$.response.content.[1].title", is("초콜릿 기프티콘 이벤트")))
@@ -261,6 +314,8 @@ class GiftControllerTest {
         String adminId = "test_admin";
         Long GiftId = 1L;
 
+        given(this.giftService.findGiftWinners(Pageable.unpaged(), 1L)).willReturn(null);
+
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/gift/v1/{giftId}/winners",GiftId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("admin-id", adminId)
@@ -304,3 +359,4 @@ class GiftControllerTest {
 
     }
 }
+

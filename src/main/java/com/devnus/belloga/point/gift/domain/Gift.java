@@ -58,4 +58,8 @@ public class Gift {
     public void changeGiftStatus(GiftStatus giftStatus) {
         this.giftStatus = giftStatus;
     }
+    public void addGifticon(Gifticon gifticon) {
+        gifticon.setGift(this);
+        this.gifticonList.add(gifticon);
+    }
 }

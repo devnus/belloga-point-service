@@ -36,6 +36,29 @@ public class GiftController {
                 .success(true)
                 .build(), HttpStatus.OK);
     }
+
+    /**
+     * gift 프로젝트에 기프티콘을 추가한다
+     * @param adminId
+     * @param createGifticonDto
+     * @return
+     */
+    @PostMapping("/v1/gifticon")
+    public ResponseEntity<CommonResponse> createGifticon(
+            @GetAccountIdentification(role = UserRole.ADMIN) String adminId,
+            @Valid @RequestBody RequestGift.CreateGifticon createGifticonDto) {
+
+        giftService.addGifticonToGiftProject(
+                createGifticonDto.getGiftId(),
+                createGifticonDto.getTitle(),
+                createGifticonDto.getCode(),
+                createGifticonDto.getExpectedDate()
+                );
+
+        return new ResponseEntity<>(CommonResponse.builder()
+                .success(true)
+                .build(), HttpStatus.OK);
+    }
     /**
      * gift 프로젝트 리스트를 조회한다.
      * @param

@@ -39,4 +39,8 @@ public class Gifticon extends BaseTimeEntity {
         this.code = code;
         this.expiredDate = expiredDate;
     }
+
+    public void setGift(Gift gift) {
+        this.gift = gift;
+    }
 }

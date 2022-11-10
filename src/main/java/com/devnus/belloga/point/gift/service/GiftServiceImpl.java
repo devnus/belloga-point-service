@@ -52,6 +52,27 @@ public class GiftServiceImpl implements GiftService {
     }
 
     /**
+     * 기프트Id에 기프티콘 정보를 추가한다
+     * @param giftId
+     * @param title
+     * @param code
+     */
+    @Override
+    @Transactional
+    public void addGifticonToGiftProject(Long giftId, String title, String code, Date expiredDate) {
+        Gift gift = giftRepository.findById(giftId)
+                .orElseThrow(()->new NotFoundGiftIdException());
+        // 기프트타입이 일치하지 않아도 해당 기프트를 찾을 수 없다고 표시
+        if(!gift.getGiftType().equals(GiftType.GIFTICON)) throw new NotFoundGiftIdException();
+
+        gift.addGifticon(Gifticon.builder()
+                        .expiredDate(expiredDate)
+                        .title(title)
+                        .code(code)
+                .build());
+    }
+
+    /**
      * 생성된 모든 이벤트를 조회한다. 당첨 확률도 반환한다.
      * @param pageable
      * @return

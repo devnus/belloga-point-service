@@ -1,0 +1,15 @@
+[[api-add-gifticon]]
+== 기프티콘 추가 API
+기프티콘을 gift에 추가합니다
+
+====== 요청 형식
+include::{snippets}/add-gifticon/http-request.adoc[]
+====== Request Body
+include::{snippets}/add-gifticon/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/add-gifticon/http-response.adoc[]
+include::{snippets}/add-gifticon/response-fields.adoc[]
+====== Response Body
+include::{snippets}/add-gifticon/response-body.adoc[]
+====== Try with curl
+include::{snippets}/add-gifticon/curl-request.adoc[]

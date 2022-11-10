@@ -38,7 +38,7 @@ app:
   stamp:
     point-ratio: 0
   web-client:
-    base-url: http://a42e30416f79f4cbc9bb75a1a0e132ed-738c4e9a914338da.elb.ap-northeast-2.amazonaws.com
+    base-url: http://a30441bfef8e841bbb077a6236568237-f31a6266d697c1cb.elb.ap-northeast-2.amazonaws.com
 
   topic:
     labeled-data:
