@@ -1,54 +1,75 @@
 package com.devnus.belloga.point.gift.controller;
 
+import com.devnus.belloga.point.gift.domain.GiftStatus;
+import com.devnus.belloga.point.gift.domain.GiftType;
+import com.devnus.belloga.point.gift.dto.ResponseGift;
+import com.devnus.belloga.point.gift.dto.ResponseUser;
 import com.devnus.belloga.point.gift.service.GiftService;
+import com.devnus.belloga.point.point.service.PointService;
+import com.devnus.belloga.point.stamp.service.StampService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
-@EmbeddedKafka(
-        brokerProperties = {
-                "listeners=PLAINTEXT://localhost:9092"
-        },
-        ports = { 9092 })
+@WebMvcTest
+@MockBean(JpaMetamodelMappingContext.class)
 class GiftControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
+    @MockBean
     private GiftService giftService;
+    @MockBean
+    private PointService pointService;
+    @MockBean
+    private StampService stampService;
 
     @Test
     @DisplayName("이벤트 프로젝트 조회 API 성공 테스트")
     void getAllGiftProjectList () throws Exception {
+        List<ResponseGift.GiftProject> list = new ArrayList<>();
+        list.add(ResponseGift.GiftProject.builder()
+                        .giftType(GiftType.GIFTICON)
+                        .giftStatus(GiftStatus.WAITING)
+                        .title("바나나 기프티콘 이벤트")
+                .build());
+        list.add(ResponseGift.GiftProject.builder()
+                .giftType(GiftType.GIFTICON)
+                .giftStatus(GiftStatus.WAITING)
+                .title("초콜릿 기프티콘 이벤트")
+                .build());
+        Page<ResponseGift.GiftProject> pages = new PageImpl<>(list);
+
+        given(this.giftService.getAllGiftProject(Mockito.any(Pageable.class))).willReturn(pages);
+
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/gift/v1")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -71,14 +92,7 @@ class GiftControllerTest {
                                 fieldWithPath("response.content.[].odds").description("응모하면 당첨될 확률"),
                                 fieldWithPath("response.content.[].gifticonCount").description("기프티콘 개수"),
                                 fieldWithPath("response.content.[].applyCount").description("응모자 수"),
-                                fieldWithPath("response.pageable.sort.unsorted").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.sort.sorted").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.sort.empty").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.pageNumber").description("page number"),
-                                fieldWithPath("response.pageable.pageSize").description("page size"),
-                                fieldWithPath("response.pageable.offset").description("page offset"),
-                                fieldWithPath("response.pageable.paged").description("paged"),
-                                fieldWithPath("response.pageable.unpaged").description("unpaged"),
+                                fieldWithPath("response.pageable").description("pageable 정보"),
                                 fieldWithPath("response.totalPages").description("total pages"),
                                 fieldWithPath("response.totalElements").description("total elements"),
                                 fieldWithPath("response.last").description("last"),
@@ -142,17 +156,20 @@ class GiftControllerTest {
     }
 
 
-    @Transactional
     @Test
     @DisplayName("이벤트 프로젝트 생성 API 성공 테스트")
     void createGiftProjectList () throws Exception {
         //given
+        String adminId = "dusik";
+        String giftType = "GIFTICON";
+        String title = "치킨 기프티콘 이벤트";
+
         Map<String, String> input = new HashMap<>();
-        input.put("giftType", "GIFTICON");
-        input.put("title", "치킨 기프티콘 이벤트");
+        input.put("giftType", giftType);
+        input.put("title", title);
         input.put("expectedDrawDate", "2023-11-11");
 
-        String adminId = "dusik";
+        doNothing().when(this.giftService).createGiftProject(adminId, GiftType.GIFTICON, title, new Date());
 
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/gift/v1")
@@ -182,7 +199,6 @@ class GiftControllerTest {
 
     }
 
-    @Transactional
     @Test
     @DisplayName("이벤트 응모 API 성공 테스트")
     void applyGiftTest () throws Exception {
@@ -190,6 +206,8 @@ class GiftControllerTest {
         Map<String, String> input = new HashMap<>();
         input.put("giftId", "1");
         String labelerId = "jisung";
+
+        given(this.giftService.createApplyGift(labelerId, 1L)).willReturn(true);
 
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/gift/v1/apply")
@@ -217,19 +235,31 @@ class GiftControllerTest {
 
     }
 
-    @Transactional
     @Test
     @DisplayName("응모한 이벤트 조회 성공 테스트")
     void getApplyGiftTest () throws Exception {
         //given
         String labelerId = "gildong";
 
+        List<ResponseGift.ApplyGiftInfo> list = new ArrayList<>();
+        list.add(ResponseGift.ApplyGiftInfo.builder()
+                .giftType(GiftType.GIFTICON)
+                .title("바나나 기프티콘 이벤트")
+                .build());
+        list.add(ResponseGift.ApplyGiftInfo.builder()
+                .giftType(GiftType.GIFTICON)
+                .title("초콜릿 기프티콘 이벤트")
+                .build());
+        Page<ResponseGift.ApplyGiftInfo> pages = new PageImpl<>(list);
+
+        given(this.giftService.findApplyGiftInfoByLabelerId(Mockito.any(Pageable.class), Mockito.any())).willReturn(pages);
+
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/gift/v1/apply")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("labeler-id", labelerId)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.response.content.[0].title", is("바나나 기프티콘 이벤트"))) // seed 참고
+                .andExpect(jsonPath("$.response.content.[0].title", is("바나나 기프티콘 이벤트")))
                 .andExpect(jsonPath("$.response.content.[1].title", is("초콜릿 기프티콘 이벤트")))
 
                 .andDo(print())
@@ -245,14 +275,7 @@ class GiftControllerTest {
                                 fieldWithPath("response.content.[].expectedDrawDate").description("추첨일"),
                                 fieldWithPath("response.content.[].applyStatus").description("당첨 여부"),
 
-                                fieldWithPath("response.pageable.sort.unsorted").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.sort.sorted").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.sort.empty").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.pageNumber").description("page number"),
-                                fieldWithPath("response.pageable.pageSize").description("page size"),
-                                fieldWithPath("response.pageable.offset").description("page offset"),
-                                fieldWithPath("response.pageable.paged").description("paged"),
-                                fieldWithPath("response.pageable.unpaged").description("unpaged"),
+                                fieldWithPath("response.pageable").description("페이징 처리 정보"),
                                 fieldWithPath("response.totalPages").description("total pages"),
                                 fieldWithPath("response.totalElements").description("total elements"),
                                 fieldWithPath("response.last").description("last"),
@@ -270,7 +293,6 @@ class GiftControllerTest {
                 ));
 
     }
-    @Transactional
     @Test
     @DisplayName("이벤트 추첨 API 성공 테스트")
     void drawGiftTest () throws Exception {
@@ -314,7 +336,22 @@ class GiftControllerTest {
         String adminId = "test_admin";
         Long GiftId = 1L;
 
-        given(this.giftService.findGiftWinners(Pageable.unpaged(), 1L)).willReturn(null);
+        List<ResponseUser.LabelerInfo> list = new ArrayList<>();
+        list.add(ResponseUser.LabelerInfo.builder()
+                .phoneNumber("123-123")
+                .birthYear("2022-11-11")
+                .email("asd@naver.com")
+                .name("길동")
+                .build());
+        list.add(ResponseUser.LabelerInfo.builder()
+                    .phoneNumber("123-123")
+                    .birthYear("2022-11-11")
+                    .email("asd@naver.com")
+                    .name("길동")
+                .build());
+        Page<ResponseUser.LabelerInfo> pages = new PageImpl<>(list);
+
+        given(this.giftService.findGiftWinners(Mockito.any(Pageable.class), Mockito.any())).willReturn(pages);
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/gift/v1/{giftId}/winners",GiftId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -333,14 +370,7 @@ class GiftControllerTest {
                                 fieldWithPath("response.content.[].name").description("이벤트 당첨자의 이름"),
                                 fieldWithPath("response.content.[].birthYear").description("이벤트 당첨자의 생년월일"),
 
-                                fieldWithPath("response.pageable.sort.unsorted").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.sort.sorted").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.sort.empty").description("페이징 처리 sort 정보"),
-                                fieldWithPath("response.pageable.pageNumber").description("page number"),
-                                fieldWithPath("response.pageable.pageSize").description("page size"),
-                                fieldWithPath("response.pageable.offset").description("page offset"),
-                                fieldWithPath("response.pageable.paged").description("paged"),
-                                fieldWithPath("response.pageable.unpaged").description("unpaged"),
+                                fieldWithPath("response.pageable").description("페이징 처리 정보"),
                                 fieldWithPath("response.totalPages").description("total pages"),
                                 fieldWithPath("response.totalElements").description("total elements"),
                                 fieldWithPath("response.last").description("last"),
