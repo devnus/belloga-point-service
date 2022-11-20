@@ -42,6 +42,7 @@ public class StampController {
             stampService.addStamp(labelerId);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
 
         return new ResponseEntity<>(CommonResponse.builder()
@@ -65,6 +66,7 @@ public class StampController {
             result = stampService.getMyStampInfo(labelerId);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
 
         return new ResponseEntity<>(CommonResponse.builder()

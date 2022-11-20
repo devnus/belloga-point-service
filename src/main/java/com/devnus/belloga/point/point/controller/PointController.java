@@ -33,6 +33,7 @@ public class PointController {
             result = pointService.getMyPointInfo(labelerId);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return new ResponseEntity<>(CommonResponse.builder()
                 .success(true)
