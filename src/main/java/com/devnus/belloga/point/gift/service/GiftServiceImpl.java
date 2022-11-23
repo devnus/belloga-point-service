@@ -1,5 +1,6 @@
 package com.devnus.belloga.point.gift.service;
 
+import com.devnus.belloga.point.common.exception.error.InsufficientDrawConditionException;
 import com.devnus.belloga.point.common.exception.error.InsufficientStampException;
 import com.devnus.belloga.point.common.exception.error.NotFoundGiftIdException;
 import com.devnus.belloga.point.common.exception.error.NotFoundLabelerIdException;
@@ -144,6 +145,10 @@ public class GiftServiceImpl implements GiftService {
         // 응모자 id 추출
         List<Long> ids = new LinkedList<>();
         gift.getApplyGiftList().forEach(applyGift -> ids.add(applyGift.getId()));
+
+        // 응모자 추첨 조건이 충분치 않다.
+        if(ids.size() == 0 || ids.size() < gift.getGifticonList().size())
+            throw new InsufficientDrawConditionException();
 
         // 응모자에게 전부 LOSE를 부여
         applyGiftRepository.bulkUpdateToChangeStatus(ids, ApplyStatus.LOSE);

@@ -11,7 +11,8 @@ public enum ErrorCode {
     INSUFFICIENT_POINT(HttpStatus.FORBIDDEN, "POINT_001", "포인트가 부족함"),
     NOT_FOUND_TEMP_POINT(HttpStatus.NOT_FOUND, "POINT_001", "해당 라벨링UUID로 임시 포인트를 찾을 수 없음"),
     NOT_FOUND_GIFT(HttpStatus.NOT_FOUND, "GIFT_001", "해당하는 GIFT가 없음"),
-    INSUFFICIENT_STAMP(HttpStatus.FORBIDDEN, "STAMP_001", "스템프가 부족함");
+    INSUFFICIENT_STAMP(HttpStatus.FORBIDDEN, "STAMP_001", "스템프가 부족함"),
+    INSUFFICIENT_DRAW_CONDITION(HttpStatus.FORBIDDEN, "DRAW_001", "응모자 추첨 조건이 부족함");
 
     private final String code;
     private final String message;

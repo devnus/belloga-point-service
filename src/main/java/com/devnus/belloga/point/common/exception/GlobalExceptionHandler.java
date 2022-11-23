@@ -115,5 +115,22 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(response, errorCode.getStatus());
     }
+
+    @ExceptionHandler(InsufficientDrawConditionException.class)
+    protected ResponseEntity<CommonResponse> handleInsufficientDrawConditionException(InsufficientDrawConditionException ex) {
+        ErrorCode errorCode = ErrorCode.INSUFFICIENT_DRAW_CONDITION;
+
+        ErrorResponse error = ErrorResponse.builder()
+                .status(errorCode.getStatus().value())
+                .message(errorCode.getMessage())
+                .code(errorCode.getCode())
+                .build();
+
+        CommonResponse response = CommonResponse.builder()
+                .success(false)
+                .error(error)
+                .build();
+        return new ResponseEntity<>(response, errorCode.getStatus());
+    }
 }
 
