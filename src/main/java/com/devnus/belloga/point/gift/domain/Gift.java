@@ -55,8 +55,8 @@ public class Gift {
         this.giftStatus = GiftStatus.WAITING;
     }
 
-    public void changeGiftStatus(GiftStatus giftStatus) {
-        this.giftStatus = giftStatus;
+    public void changeGiftStatusToDone() {
+        this.giftStatus = GiftStatus.DONE;
     }
     public void addGifticon(Gifticon gifticon) {
         gifticon.setGift(this);

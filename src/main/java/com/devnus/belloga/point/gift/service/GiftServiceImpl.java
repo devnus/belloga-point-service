@@ -183,7 +183,7 @@ public class GiftServiceImpl implements GiftService {
         }
 
         // gift를 done으로 바꾼다.
-        gift.changeGiftStatus(GiftStatus.DONE);
+        gift.changeGiftStatusToDone();
     }
 
     /**
