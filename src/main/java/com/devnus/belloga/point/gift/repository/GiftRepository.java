@@ -14,6 +14,5 @@ import java.util.Optional;
 public interface GiftRepository extends JpaRepository<Gift, Long> {
     Page<Gift> findAll(Pageable pageable);
     @EntityGraph(value = "Gift.fetchGifticon", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select g from Gift g where id = :id")
-    Optional<Gift> findByIdFetchGifticon(@Param("id") Long id);
+    Optional<Gift> findWithGifticonById(Long id);
 }

@@ -139,28 +139,33 @@ public class GiftServiceImpl implements GiftService {
     @Override
     @Transactional
     public void drawGifticonEvent(String adminId, Long giftId) {
-        Gift gift = giftRepository.findByIdFetchGifticon(giftId)
+        Gift gift = giftRepository.findWithGifticonById(giftId)
                 .orElseThrow(()->new NotFoundGiftIdException());
+
+        // 응모자 추첨 조건이 충분치 않다.
+        if(gift.getApplyGiftList().size() == 0 || gift.getApplyGiftList().size() < gift.getGifticonList().size())
+            throw new InsufficientDrawConditionException();
+
+        // gift를 done으로 바꾼다.
+        gift.changeGiftStatusToDone();
+        giftRepository.flush();
 
         // 응모자 id 추출
         List<Long> ids = new LinkedList<>();
         gift.getApplyGiftList().forEach(applyGift -> ids.add(applyGift.getId()));
 
-        // 응모자 추첨 조건이 충분치 않다.
-        if(ids.size() == 0 || ids.size() < gift.getGifticonList().size())
-            throw new InsufficientDrawConditionException();
-
         // 응모자에게 전부 LOSE를 부여
         applyGiftRepository.bulkUpdateToChangeStatus(ids, ApplyStatus.LOSE);
+
         //  N명에게만 WIN 부여
         List<Long> wins = new LinkedList<>();
         int count = 0; // 추출한 사람 수
         // 기프티콘 개수만큼 반복문을 돌려 승리자 추출
         for(int i = 0 ; i < gift.getGifticonList().size() ; i++) {
-            int randomIdx = (int) (Math.random() * (gift.getApplyGiftList().size() - 1));
+            int randomIdx = (int) (Math.random() * (ids.size() - 1));
             // 이미 추출한 숫자이며 뽑을 사람이 아직 남아있는 경우 다시뽑기
-            while (wins.contains(ids.get(randomIdx)) && count < gift.getApplyGiftList().size()) {
-                randomIdx = (int) (Math.random() * (gift.getApplyGiftList().size() - 1));
+            while (wins.contains(ids.get(randomIdx)) && count < ids.size()) {
+                randomIdx = (int) (Math.random() * (ids.size() - 1));
             }
             wins.add(ids.get(randomIdx));
             count++;
@@ -182,8 +187,7 @@ public class GiftServiceImpl implements GiftService {
                             .clickLink(" ").build());
         }
 
-        // gift를 done으로 바꾼다.
-        gift.changeGiftStatusToDone();
+
     }
 
     /**
